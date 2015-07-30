@@ -45,7 +45,12 @@ public class IntentReceiver extends AppCompatActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
             }
+            public void onPageFinished(WebView view, String url) {
+                String js = "javascript:Android.passData(['a', 'b']);";
+                view.loadUrl(js);
+            }
         });
+        webview.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         webview.loadUrl(sharedText);
     }
