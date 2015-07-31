@@ -46,7 +46,32 @@ public class IntentReceiver extends AppCompatActivity {
                 Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
             }
             public void onPageFinished(WebView view, String url) {
-                String js = "javascript:Android.passData(['a', 'b']);";
+                String js = "javascript:(function() {"
+    + "function isScriptNode(node) {"
+    + "    return node.nodeType === Node.ELEMENT_NODE && node.nodeName === \"SCRIPT\";"
+    + "}"
+    + "function isWhiteSpaceOnly(node) {"
+    + "    return node.nodeValue.replace(/[\\n\\t ]+/, \"\") === \"\";" // Note: escapes in regexp!
+    + "}"
+    + "function getAllTextNodes(elem) {"
+    + "    var filter = NodeFilter.SHOW_TEXT,"
+    + "        walker = document.createTreeWalker(elem, filter, null, false),"
+    + "        arr = [],"
+    + "        node;"
+    + "    while (walker.nextNode()) {"
+    + "        node = walker.currentNode;"
+    + "        if (node.parentNode && isScriptNode(node.parentNode)) {"
+    + "            continue;"
+    + "        }"
+    + "        if (node.isElementContentWhitespace || isWhiteSpaceOnly(node)) {"
+    + "            continue;"
+    + "        }"
+    + "        arr.push(node.nodeValue);" // Note: changed 'node' to 'node.nodeValue'
+    + "    }"
+    + "    return arr;"
+    + "}"
+    + "Android.passData(getAllTextNodes(document.body));"
+    + "})();";
                 view.loadUrl(js);
             }
         });
