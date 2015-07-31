@@ -11,6 +11,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.StringBuilder;
 
 
 public class IntentReceiver extends AppCompatActivity {
@@ -47,37 +52,42 @@ public class IntentReceiver extends AppCompatActivity {
             }
             public void onPageFinished(WebView view, String url) {
                 String js = "javascript:(function() {"
-    + "function isScriptNode(node) {"
-    + "    return node.nodeType === Node.ELEMENT_NODE && node.nodeName === \"SCRIPT\";"
-    + "}"
-    + "function isWhiteSpaceOnly(node) {"
-    + "    return node.nodeValue.replace(/[\\n\\t ]+/, \"\") === \"\";" // Note: escapes in regexp!
-    + "}"
-    + "function getAllTextNodes(elem) {"
-    + "    var filter = NodeFilter.SHOW_TEXT,"
-    + "        walker = document.createTreeWalker(elem, filter, null, false),"
-    + "        arr = [],"
-    + "        node;"
-    + "    while (walker.nextNode()) {"
-    + "        node = walker.currentNode;"
-    + "        if (node.parentNode && isScriptNode(node.parentNode)) {"
-    + "            continue;"
-    + "        }"
-    + "        if (node.isElementContentWhitespace || isWhiteSpaceOnly(node)) {"
-    + "            continue;"
-    + "        }"
-    + "        arr.push(node.nodeValue);" // Note: changed 'node' to 'node.nodeValue'
-    + "    }"
-    + "    return arr;"
-    + "}"
-    + "Android.passData(getAllTextNodes(document.body));"
-    + "})();";
+                    + loadJsFromAssets("extract.js")
+                    + "})();";
                 view.loadUrl(js);
             }
         });
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         webview.loadUrl(sharedText);
+    }
+
+    private String loadJsFromAssets(String filename) {
+        BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            InputStream is = getAssets().open(filename);
+            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+            reader = new BufferedReader(isr);
+
+            String line = reader.readLine();
+            while (line != null) {
+                sb.append(line + '\n');
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            android.util.Log.i("zzz", e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    android.util.Log.i("zzz", e.getMessage());
+                }
+            }
+        }
+        android.util.Log.i("zzz", sb.toString());
+        return sb.toString();
     }
 
     @Override
