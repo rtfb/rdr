@@ -21,12 +21,12 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void passData(String []data) {
-        android.util.Log.i("zzz", "Len: " + data.length);
+        L.og("Len: " + data.length);
         for (String d : data) {
             if (d == null) {
-                android.util.Log.i("zzz", "null");
+                L.og("null");
             } else {
-                android.util.Log.i("zzz", "'" + d + "'");
+                L.og("'" + d + "'");
             }
         }
     }

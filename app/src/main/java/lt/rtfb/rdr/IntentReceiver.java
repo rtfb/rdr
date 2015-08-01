@@ -31,9 +31,9 @@ public class IntentReceiver extends AppCompatActivity {
         String action = i.getAction();
         String type = i.getType();
         String sharedText = i.getStringExtra(Intent.EXTRA_TEXT);
-        android.util.Log.i("zzz", action);
-        android.util.Log.i("zzz", type);
-        android.util.Log.i("zzz", sharedText);
+        L.og(action);
+        L.og(type);
+        L.og(sharedText);
 
         final WebView webview = (WebView) findViewById(R.id.main_webview);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -69,24 +69,23 @@ public class IntentReceiver extends AppCompatActivity {
             InputStream is = getAssets().open(filename);
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             reader = new BufferedReader(isr);
-
             String line = reader.readLine();
             while (line != null) {
                 sb.append(line + '\n');
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            android.util.Log.i("zzz", e.getMessage());
+            L.og(e.getMessage());
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    android.util.Log.i("zzz", e.getMessage());
+                    L.og(e.getMessage());
                 }
             }
         }
-        android.util.Log.i("zzz", sb.toString());
+        L.og(sb.toString());
         return sb.toString();
     }
 
