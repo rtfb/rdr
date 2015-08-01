@@ -20,14 +20,7 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public void passData(String []data) {
-        L.og("Len: " + data.length);
-        for (String d : data) {
-            if (d == null) {
-                L.og("null");
-            } else {
-                L.og("'" + d + "'");
-            }
-        }
+    public void passData(String jsonData) {
+        L.og(jsonData);
     }
 }

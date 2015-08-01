@@ -19,9 +19,19 @@ function getAllTextNodes(elem) {
         if (node.isElementContentWhitespace || isWhiteSpaceOnly(node)) {
             continue;
         }
-        arr.push(node.nodeValue); /* Note: changed 'node' to 'node.nodeValue' */
+        arr.push(node);
     }
     return arr;
 }
 
-Android.passData(getAllTextNodes(document.body));
+function nodesToIndexedArray(nodes) {
+    return nodes.map(function(item, index) {
+        return {
+            index: index,
+            text: item.nodeValue
+        };
+    });
+}
+
+var data = nodesToIndexedArray(getAllTextNodes(document.body));
+Android.passData(JSON.stringify(data));
