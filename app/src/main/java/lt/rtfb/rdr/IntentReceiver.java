@@ -37,6 +37,10 @@ public class IntentReceiver extends AppCompatActivity {
 
         final WebView webview = (WebView) findViewById(R.id.main_webview);
         webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDefaultFontSize(25);
+        webview.setPadding(0, 0, 0, 0);
+        webview.getSettings().setLoadWithOverviewMode(true);
+        webview.getSettings().setUseWideViewPort(true);
 
         final Activity activity = this;
         webview.setWebChromeClient(new WebChromeClient() {
